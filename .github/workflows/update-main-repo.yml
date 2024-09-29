@@ -60,3 +60,4 @@ jobs:
           body: "This PR updates the client submodule to the new tag ${{ env.TAG_NAME }}."
           base: main
           head: update-client-submodule-${{ env.TAG_NAME }}
+          repository: Ilyassxx99/airflow  # Explicitly set the target repository
