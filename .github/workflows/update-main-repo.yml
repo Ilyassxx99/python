@@ -25,8 +25,6 @@ jobs:
         run: |
           git clone https://github.com/Ilyassxx99/airflow
           cd airflow
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       # Update the submodule to the new tag in the client repository
       - name: Update Submodule Reference to New Tag
@@ -37,12 +35,16 @@ jobs:
           git fetch --tags
           git checkout ${{ env.TAG_NAME }}  # Checkout the new tag
           cd ../..
+          git config user.name "Ilyassxx99"
+          git config user.email ${{ secrets.TOKEN }}
           git add airflow/client3
           git commit -m "Update client submodule to tag ${{ env.TAG_NAME }}"
 
       # Push the updated submodule branch
       - name: Push Changes to New Branch
         run: |
+          git config user.name "Ilyassxx99"
+          git config user.email ${{ secrets.TOKEN }}
           git checkout -b update-client-submodule-${{ env.TAG_NAME }}
           git push origin update-client-submodule-${{ env.TAG_NAME }}
 
@@ -50,7 +52,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.TOKEN }}
           commit-message: "Update client submodule to tag ${{ env.TAG_NAME }}"
           title: "Update client submodule to tag ${{ env.TAG_NAME }}"
           body: "This PR updates the client submodule to the new tag ${{ env.TAG_NAME }}."
