@@ -34,10 +34,10 @@ jobs:
           cd client3
           git fetch --tags
           git checkout ${{ env.TAG_NAME }}  # Checkout the new tag
-          cd ../..
+          cd ..
           git config user.name "Ilyassxx99"
           git config user.email ${{ secrets.TOKEN }}
-          git add airflow/client3
+          git add client3
           git commit -m "Update client submodule to tag ${{ env.TAG_NAME }}"
 
       # Push the updated submodule branch
