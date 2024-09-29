@@ -54,7 +54,7 @@ jobs:
         run: |
           git config user.name "Ilyassxx99"
           gh pr create \
-            --repo Ilyassxx99/airflow.git \
+            --repo Ilyassxx99/airflow \
             --base main \
             --head update-client-submodule-${{ env.TAG_NAME }} \
             --title "Update client submodule to tag ${{ env.TAG_NAME }}" \
