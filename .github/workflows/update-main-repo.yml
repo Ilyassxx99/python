@@ -45,6 +45,7 @@ jobs:
         run: |
           git config user.name "Ilyassxx99"
           git config user.email ${{ secrets.TOKEN }}
+          cd airflow
           git checkout -b update-client-submodule-${{ env.TAG_NAME }}
           git push origin update-client-submodule-${{ env.TAG_NAME }}
 
