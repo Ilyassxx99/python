@@ -43,9 +43,10 @@ jobs:
       # Push the updated submodule branch
       - name: Push Changes to New Branch
         run: |
+          cd airflow
           git config user.name "Ilyassxx99"
           git config user.email ${{ secrets.TOKEN }}
-          cd airflow
+          git remote set-url origin https://Ilyassxx99:${{ secrets.GITHUB_TOKEN }}@github.com/Ilyassxx99/airflow.git
           git checkout -b update-client-submodule-${{ env.TAG_NAME }}
           git push origin update-client-submodule-${{ env.TAG_NAME }}
 
