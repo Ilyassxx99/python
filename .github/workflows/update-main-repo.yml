@@ -36,7 +36,6 @@ jobs:
           git checkout ${{ env.TAG_NAME }}  # Checkout the new tag
           cd ..
           git config user.name "Ilyassxx99"
-          git config user.email ${{ secrets.TOKEN }}
           git add client3
           git commit -m "Update client submodule to tag ${{ env.TAG_NAME }}"
 
@@ -50,9 +49,10 @@ jobs:
 
       # Create a Pull Request in the main repository
       - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN }}
         run: |
           git config user.name "Ilyassxx99"
-          git config user.email ${{ secrets.TOKEN }}
           gh pr create \
             --repo Ilyassxx99/airflow.git \
             --base main \
