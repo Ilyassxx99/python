@@ -37,7 +37,7 @@ jobs:
           git fetch --tags
           git checkout ${{ env.TAG_NAME }}  # Checkout the new tag
           cd ../..
-          git add client3
+          git add airflow/client3
           git commit -m "Update client submodule to tag ${{ env.TAG_NAME }}"
 
       # Push the updated submodule branch
