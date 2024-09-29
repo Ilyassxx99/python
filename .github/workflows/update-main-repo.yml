@@ -44,18 +44,18 @@ jobs:
       - name: Push Changes to New Branch
         run: |
           cd airflow
-          git remote set-url origin https://Ilyassxx99:${{ secrets.TOKEN }}@github.com/Ilyassxx99/airflow.git
+          git remote set-url origin https://x-access-token:${{ secrets.TOKEN }}@github.com/Ilyassxx99/airflow.git
           git checkout -b update-client-submodule-${{ env.TAG_NAME }}
           git push origin update-client-submodule-${{ env.TAG_NAME }}
 
       # Create a Pull Request in the main repository
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          token: ${{ secrets.TOKEN }}
-          commit-message: "Update client submodule to tag ${{ env.TAG_NAME }}"
-          title: "Update client submodule to tag ${{ env.TAG_NAME }}"
-          body: "This PR updates the client submodule to the new tag ${{ env.TAG_NAME }}."
-          base: main
-          head: update-client-submodule-${{ env.TAG_NAME }}
-          repository: Ilyassxx99/airflow  # Explicitly set the target repository
+        run: |
+          git config user.name "Ilyassxx99"
+          git config user.email ${{ secrets.TOKEN }}
+          gh pr create \
+            --repo Ilyassxx99/airflow.git \
+            --base main \
+            --head update-client-submodule-${{ env.TAG_NAME }} \
+            --title "Update client submodule to tag ${{ env.TAG_NAME }}" \
+            --body "This PR updates the client submodule to the new tag ${{ env.TAG_NAME }}."
