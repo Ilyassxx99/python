@@ -1,0 +1,58 @@
+name: Update Main Repo Submodule on New Tag
+
+on:
+  push:
+    tags:
+      - '*'  # Trigger on any tag push
+
+jobs:
+  update-submodule:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the client repository (the one triggering the action)
+      - name: Checkout Client Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Ensure all tags are available
+
+      # Get the new tag name (use GitHub context)
+      - name: Get New Tag
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      # Clone the main repository
+      - name: Clone Main Repository
+        run: |
+          git clone https://github.com/Ilyassxx99/airflow
+          cd airflow
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Update the submodule to the new tag in the client repository
+      - name: Update Submodule Reference to New Tag
+        run: |
+          cd airflow
+          git submodule update --init --remote client3
+          cd client3
+          git fetch --tags
+          git checkout ${{ env.TAG_NAME }}  # Checkout the new tag
+          cd ../..
+          git add client3
+          git commit -m "Update client submodule to tag ${{ env.TAG_NAME }}"
+
+      # Push the updated submodule branch
+      - name: Push Changes to New Branch
+        run: |
+          git checkout -b update-client-submodule-${{ env.TAG_NAME }}
+          git push origin update-client-submodule-${{ env.TAG_NAME }}
+
+      # Create a Pull Request in the main repository
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Update client submodule to tag ${{ env.TAG_NAME }}"
+          title: "Update client submodule to tag ${{ env.TAG_NAME }}"
+          body: "This PR updates the client submodule to the new tag ${{ env.TAG_NAME }}."
+          base: main
+          head: update-client-submodule-${{ env.TAG_NAME }}
